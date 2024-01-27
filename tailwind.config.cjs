@@ -5,7 +5,8 @@ const config = {
 	theme: {
 		extend: {
 			colors: {
-				'dark-grey': '#171717'
+				'dark-grey': '#171717',
+				beige: '#FFF7F8'
 			},
 			fontFamily: {
 				inter: ['Inter', 'sans-serif']
