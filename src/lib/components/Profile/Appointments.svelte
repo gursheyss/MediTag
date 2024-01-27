@@ -2,7 +2,7 @@
 	export let data;
 </script>
 
-<section>
+<section class="pt-4">
 	<h1 class="mb-4 text-2xl font-bold">Appointments</h1>
 	{#each data as appointment (appointment.id)}
 		<article class="mb-4 flex flex-col rounded-lg bg-white p-4 shadow">

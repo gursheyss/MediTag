@@ -6,7 +6,9 @@
 	export let data;
 </script>
 
-<Header data={data.profile} />
-<Appointments data={data.appointments} />
-<Prescriptions data={data.prescriptions} />
-<MedicalHistory data={data.medical} />
+<div class="p-6">
+	<Header data={data.profile} />
+	<Appointments data={data.appointments} />
+	<Prescriptions data={data.prescriptions} />
+	<MedicalHistory data={data.medical} />
+</div>
