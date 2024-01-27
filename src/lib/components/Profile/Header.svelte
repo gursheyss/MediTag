@@ -1,5 +1,12 @@
 <script lang="ts">
 	export let data;
+	let dob = new Date(data.dateofbirth);
+	let formattedDob = `${dob.getMonth() + 1}/${dob.getDate()}/${dob.getFullYear()}`;
+	let age = new Date().getFullYear() - dob.getFullYear();
+	let m = new Date().getMonth() - dob.getMonth();
+	if (m < 0 || (m === 0 && new Date().getDate() < dob.getDate())) {
+		age--;
+	}
 </script>
 
 <header class="flex items-center rounded-lg bg-white p-4 shadow">
@@ -9,6 +16,6 @@
 	<div class="ml-4">
 		<h2 class="text-lg font-bold">{data.name}</h2>
 		<p class="text-sm text-gray-600">{data.sex}</p>
-		<p class="text-sm text-gray-600">{data.dateofbirth}</p>
+		<p class="text-sm text-gray-600">DOB: {formattedDob} (Age: {age})</p>
 	</div>
 </header>
