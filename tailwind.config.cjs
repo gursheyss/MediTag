@@ -3,7 +3,14 @@ const config = {
 	content: ['./src/**/*.{html,js,svelte,ts}'],
 
 	theme: {
-		extend: {}
+		extend: {
+			colors: {
+				'dark-grey': '#171717'
+			},
+			fontFamily: {
+				inter: ['Inter', 'sans-serif']
+			}
+		}
 	},
 
 	plugins: []
