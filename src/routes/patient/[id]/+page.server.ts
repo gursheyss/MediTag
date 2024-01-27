@@ -5,11 +5,6 @@ export const load = async ({ params }) => {
 
 	const { data: profileData } = await supabase.from('profile').select('*').eq('id', id);
 
-	const { data: appointmentData } = await supabase
-		.from('appointments')
-		.select('*')
-		.eq('patient_id', id);
-
 	const { data: logData } = await supabase.from('logs').select('*').eq('patient_id', id);
 	const { data: medicalData } = await supabase
 		.from('medical_history')
@@ -22,7 +17,6 @@ export const load = async ({ params }) => {
 
 	console.log({
 		profile: profileData[0],
-		appointments: appointmentData,
 		logs: logData,
 		medical: medicalData,
 		prescriptions: prescriptionData
@@ -30,7 +24,6 @@ export const load = async ({ params }) => {
 
 	return {
 		profile: profileData[0],
-		appointments: appointmentData,
 		logs: logData,
 		medical: medicalData,
 		prescriptions: prescriptionData

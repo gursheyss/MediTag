@@ -1,5 +1,4 @@
 <script lang="ts">
-	import Appointments from './Appointments.svelte';
 	import Header from './Header.svelte';
 	import Logs from './Logs.svelte';
 	import MedicalHistory from './MedicalHistory.svelte';
@@ -10,7 +9,6 @@
 <div class="p-6">
 	<Header data={data.profile} />
 	<Logs data={data.logs} />
-	<Appointments data={data.appointments} />
 	<Prescriptions data={data.prescriptions} />
 	<MedicalHistory data={data.medical} />
 </div>
