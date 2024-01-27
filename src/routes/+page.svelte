@@ -1,1 +1,5 @@
-<p class="font-sans text-white">Test text</p>
+<script lang="ts">
+	import Scanner from '$lib/components/Scanner.svelte';
+</script>
+
+<Scanner />
