@@ -9,7 +9,7 @@
 			<h2 class="text-lg font-bold">{log.label} by {log.doctor}</h2>
 			<p class="text-sm text-gray-600">Description: {log.description}</p>
 			<p class="text-sm text-gray-600">
-				Created at: {new Date(log.created_at).toLocaleString()}
+				{new Date(log.created_at).toLocaleString()}
 			</p>
 		</article>
 	{/each}

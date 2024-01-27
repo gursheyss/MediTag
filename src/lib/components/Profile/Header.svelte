@@ -9,7 +9,7 @@
 	}
 </script>
 
-<header class="flex items-center rounded-lg bg-white p-4 shadow">
+<header class="mb-4 flex items-center rounded-lg bg-white p-4 shadow">
 	<div class="h-16 w-16 overflow-hidden rounded-full">
 		<img src={data.profile_picture_url} alt="Avatar" class="h-full w-full object-cover" />
 	</div>
