@@ -9,36 +9,51 @@
     let validationMessage = '';
     let showScanner = true;
     let showProceedButton = false;
+    let nextRoute = null;
   
     async function handleScan(data) {
-        let d = JSON.parse(data.detail);
-        console.log(d); 
+    let d = JSON.parse(data.detail);
+    console.log(d); 
 
-        showScanner = false;
-        showProceedButton = true;
+    showScanner = false;
+    showProceedButton = true;
 
-        if (scannerState === 'idle') {
-        patientData = d.patient;
-        scannerState = 'scannedPatient';
-        validationMessage = 'Scanned room QR code.';
-        } else if (scannerState === 'scannedPatient') {
-        roomData = d.room;
-        scannerState = 'idle';
+    if (scannerState === 'idle') {
+      patientData = d.patient;
+      scannerState = 'scannedPatient';
+      validationMessage = 'Scanned room QR code.';
+    } else if (scannerState === 'scannedPatient') {
+      roomData = d.patient;
+      scannerState = 'idle';
 
-        if (validate(patientData, roomData)) {
-            validationMessage = 'Access granted.';
-        } else {
-            validationMessage = 'Access denied.';
-        }
+    //   const response = await fetch('/api/checkUser', {
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'application/json'
+    //     },
+    //     body: JSON.stringify({ id: roomData.id })
+    //   });
+    //   const { exists } = await response.json();
 
-        // Wait for any pending state changes to be applied
-        await tick();
+    //   if (!exists) {
+    //     validationMessage = 'Not a valid QR code.';
+    //     return;
+    //   }
 
-        // Reset data
-        patientData = null;
-        roomData = null;
-        }
+    if (validate(patientData, roomData)) {
+        validationMessage = 'Access granted.';
+        nextRoute = '/patient/' + patientData.id;
+      } else {
+        validationMessage = 'Access denied.';
+        nextRoute = '';
+      }
+
+      await tick();
+
+      patientData = null;
+      roomData = null;
     }
+  }
   
     function proceedToNextScan() {
       showScanner = true;
@@ -52,9 +67,7 @@
     }
   
     function validate(patientData, roomData) {
-      // Implement your validation logic here
-      // For example:
-      return patientData.token === roomData.token && Math.abs(patientData.timestamp - roomData.timestamp) <= 5 * 60 * 1000;
+      return patientData.id === roomData.id && patientData.name === roomData.name;
     }
 
     let isAccessGranted = false;
@@ -84,22 +97,20 @@
     </div>
   {/if}
 
-  <div class="mt-4 text-center text-xl font-bold {isAccessGranted || isAccessDenied ? 'text-white' : ''}">
+<div class="mt-4 text-center text-xl font-bold {isAccessGranted || isAccessDenied ? 'text-white' : ''}">
     {validationMessage}
-  </div>
-
-  {#if showProceedButton}
-    <button class="mt-4 px-4 py-2 bg-blue-500 text-white rounded shadow hover:bg-blue-600 transition-colors duration-200" on:click={proceedToNextScan}>
-      Proceed to next scan
-    </button>
-  {/if}
 </div>
 
+{#if nextRoute}
+    <a href={nextRoute} class="mt-4 px-4 py-2 bg-blue-500 text-white rounded shadow hover:bg-blue-600 transition-colors duration-200">Proceed to Patient</a>
+{:else if showProceedButton}
+    <button class="mt-4 px-4 py-2 bg-blue-500 text-white rounded shadow hover:bg-blue-600 transition-colors duration-200" on:click={proceedToNextScan}>
+        Proceed to next scan
+    </button>
+{/if}
+</div>
+
+
 <style>
-  .validation-message {
-    margin-top: 20px;
-    font-size: 18px;
-    font-weight: bold;
-    text-align: center;
-  }
+
 </style>
