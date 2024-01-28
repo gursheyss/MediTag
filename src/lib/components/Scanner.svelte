@@ -1,32 +1,78 @@
 <script>
 	import { onMount, onDestroy } from 'svelte';
+	import { writable } from 'svelte/store';
+	import jsQR from 'jsqr';
 
-	let qrScanner;
-	let videoElem;
-	let QrScanner;
+	let videoElement;
+	let scanInterval;
+	let isFlipped = writable(true);
 
-	onMount(async () => {
-		QrScanner = (await import('qr-scanner')).default;
-		qrScanner = new QrScanner(videoElem, (result) => {
-			console.log(result);
-		});
-		qrScanner.start();
+	function toggleFlip() {
+		isFlipped.update((n) => !n);
+	}
+
+	onMount(() => {
+		navigator.mediaDevices
+			.getUserMedia({ video: { facingMode: 'environment' } })
+			.then((stream) => {
+				videoElement.srcObject = stream;
+				scanInterval = setInterval(scanQRCode, 100);
+			})
+			.catch((err) => {
+				console.error('Error accessing the webcam: ', err);
+			});
 	});
 
 	onDestroy(() => {
-		if (qrScanner) {
-			qrScanner.stop();
-		}
+		clearInterval(scanInterval);
 	});
+
+	function scanQRCode() {
+		const canvas = document.createElement('canvas');
+		const context = canvas.getContext('2d');
+		canvas.width = videoElement.videoWidth;
+		canvas.height = videoElement.videoHeight;
+		context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+		const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+		const code = jsQR(imageData.data, imageData.width, imageData.height, {
+			inversionAttempts: 'dontInvert'
+		});
+
+		if (code) {
+			console.log('Found QR Code:', code.data);
+			clearInterval(scanInterval); // Stop scanning once QR code is found
+			// Handle the QR code result here
+		}
+	}
 </script>
 
-<video bind:this={videoElem}></video>
+<div class="camera-container">
+	<video bind:this={videoElement} autoplay playsinline class:flipped={$isFlipped}></video>
+	<div class="qr-border"></div>
+</div>
+<button on:click={toggleFlip}>Toggle Flip</button>
 
 <style>
+	.camera-container {
+		position: relative;
+	}
 	video {
-		width: 100%;
-		max-width: 400px; /* Adjust as necessary */
-		border: 1px solid #ccc;
-		border-radius: 4px;
+		display: block;
+		max-width: 100%;
+	}
+	.qr-border {
+		position: absolute;
+		top: 96%;
+		left: 85%;
+		width: 200px;
+		height: 200px;
+		margin-left: -150px;
+		margin-top: -150px;
+		border: 5px solid rgba(255, 255, 255, 0.7);
+		box-sizing: border-box;
+		transform: translate(-50%, -50%);
+	}
+	.flipped {
+		transform: scaleX(-1);
 	}
 </style>
