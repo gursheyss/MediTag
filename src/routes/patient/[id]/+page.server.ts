@@ -1,4 +1,5 @@
 import { supabase } from '$lib/server/db';
+import { ask } from '$lib/server/openai.js';
 
 export const load = async ({ params }) => {
 	const { id } = params;
@@ -28,4 +29,12 @@ export const load = async ({ params }) => {
 		medical: medicalData,
 		prescriptions: prescriptionData
 	};
+};
+
+export const actions = {
+	default: async ({ request }) => {
+		const formData = await request.formData();
+		const data = formData.get('data');
+		await ask('Is it safe to give Tylenol to this patient?', data);
+	}
 };
