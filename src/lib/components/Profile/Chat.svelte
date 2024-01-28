@@ -4,6 +4,7 @@
 	import { createDialog, melt } from '@melt-ui/svelte';
 	import { X } from 'lucide-svelte';
 	import { fade } from 'svelte/transition';
+	export let message;
 
 	const {
 		elements: { trigger, overlay, content, title, description, close, portalled },
@@ -16,12 +17,9 @@
 	let messages = [];
 	let newMessage = '';
 
-	function sendMessage() {
-		if (newMessage.trim() !== '') {
-			messages = [...messages, { id: Date.now(), sender: 'user', text: newMessage }];
-			newMessage = '';
-		}
-	}
+	$: message;
+
+	let loading = false;
 </script>
 
 <div
@@ -30,16 +28,6 @@
 >
 	<Chat size={32} />
 </div>
-
-<form
-	method="POST"
-	use:enhance={() => {
-		return async ({ result }) => {};
-	}}
->
-	<input type="hidden" name="data" value={JSON.stringify(data)} />
-	<button>test</button>
-</form>
 
 <div class="" use:melt={$portalled}>
 	{#if $open}
@@ -62,7 +50,13 @@
 			<form
 				method="POST"
 				use:enhance={() => {
-					return async ({ result }) => {};
+					return ({ result }) => {
+						if (result.type === 'success') {
+							console.log('message:' + message);
+							loading = false;
+							messages = [...messages, message.summary];
+						}
+					};
 				}}
 			>
 				<input type="hidden" name="data" value={JSON.stringify(data)} />
@@ -85,7 +79,15 @@
 							name="prompt"
 							placeholder="Type a message..."
 						/>
-						<button class="rounded-md bg-red-500 px-4 py-2 text-white" type="submit"> Ask </button>
+						<button
+							class="rounded-md bg-red-500 px-4 py-2 text-white ${loading === true
+								? 'disabled cursor-not-allowed bg-opacity-50'
+								: ''}"
+							type="submit"
+							on:click={() => (loading = true)}
+						>
+							Ask
+						</button>
 					</div>
 				</div>
 			</form>

@@ -5,6 +5,8 @@
 	import MedicalHistory from './MedicalHistory.svelte';
 	import Prescriptions from './Prescriptions.svelte';
 	export let data;
+	export let message;
+	$: message;
 </script>
 
 <div class="p-6">
@@ -12,5 +14,5 @@
 	<Logs data={data.logs} />
 	<Prescriptions data={data.prescriptions} />
 	<MedicalHistory data={data.medical} />
-	<Chat {data} />
+	<Chat {data} {message} />
 </div>

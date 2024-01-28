@@ -21,6 +21,7 @@ export async function ask(prompt: string, data: any) {
 		model: 'gpt-4-1106-preview',
 		response_format: { type: 'json_object' }
 	});
-
-	console.log(completion.choices[0].message.content);
+	const response = JSON.parse(completion.choices[0].message.content);
+	console.log(response);
+	return response;
 }

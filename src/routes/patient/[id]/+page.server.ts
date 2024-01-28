@@ -36,6 +36,9 @@ export const actions = {
 		const formData = await request.formData();
 		const data = formData.get('data');
 		const prompt = formData.get('prompt');
-		await ask(prompt.toString(), data);
+		const resp = await ask(prompt.toString(), data);
+		return {
+			resp
+		};
 	}
 };
