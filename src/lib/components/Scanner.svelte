@@ -59,18 +59,6 @@
       display: block;
       max-width: 100%;
     }
-    .qr-border {
-      position: absolute;
-      top: 96%;
-      left: 85%;
-      width: 200px;
-      height: 200px;
-      margin-left: -150px; 
-      margin-top: -150px; 
-      border: 5px solid rgba(255, 255, 255, 0.7);
-      box-sizing: border-box;
-      transform: translate(-50%, -50%);
-    }
     .flipped {
       transform: scaleX(-1);
     }
