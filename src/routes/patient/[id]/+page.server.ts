@@ -35,6 +35,7 @@ export const actions = {
 	default: async ({ request }) => {
 		const formData = await request.formData();
 		const data = formData.get('data');
-		await ask('Is it safe to give Tylenol to this patient?', data);
+		const prompt = formData.get('prompt');
+		await ask(prompt.toString(), data);
 	}
 };
